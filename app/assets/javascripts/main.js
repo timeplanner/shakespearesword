@@ -21,12 +21,12 @@ var visitedCountries = {
     'AT':{'c':'#e37144', 'n': 'Austria'}};
 
 var postPoints = {
-    "fuzhou":{"ll":	"26.0761° N, 119.3064° E","country":"China","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"audio/irene.mp3\" type=\"audio/mpeg\"></audio>","name":"Irene","video":"video_holder","comment":"Revenge!!!","likes":"","dislikes":""},
-    "zhang jiakou":{"ll": "40.7667° N, 114.8833° E" ,"country":"China","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"ran.mp3\" type=\"audio/mpeg\"></audio>","name":"Ran","video":"video_holder","comment":"Interesting","likes":"","dislikes":""},
-    "Moscow":{"ll": "55.7500° N, 37.6167° E","country":"Russia","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"audio/dmitry.mp3\" type=\"audio/mpeg\"></audio>","name":"Dmitry","video":"video_holder","comment":"I don't like it","likes":"","dislikes":""},
-    "honduras":{"ll":"14.1000° N, 87.2167° W","country":"","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"audio/danny.mp3\" type=\"audio/mpeg\"></audio>","name":"Danny","video":"video_holder","comment":"Reminds me of another author","likes":"","dislikes":""} ,
-    "Myanmar":{"ll":"22.0000° N, 96.0000° E","country":"","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"audio/aung.mp3\" type=\"audio/mpeg\"></audio>","name":"Anh","video":"video_holder","comment":"Reflection","likes":"","dislikes":""},
-    "India"	:{"ll":"21.0000° N, 78.0000° E","country":"","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"audio/ashwin.mp3\" type=\"audio/mpeg\"></audio>","name":"Ashwin","video":"video_holder","comment":"Merchants in modern society","likes":"","dislikes":""}
+    "fuzhou":{"ll":	"26.0761° N, 119.3064° E","country":"China","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"audio/irene.mp3\" type=\"audio/mpeg\"></audio>","name":"Irene","video":"","comment":"Revenge!!!","likes":"","dislikes":""},
+    "zhang jiakou":{"ll": "40.7667° N, 114.8833° E" ,"country":"China","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"ran.mp3\" type=\"audio/mpeg\"></audio>","name":"Ran","video":"\<embed width='200' height='200' src='http://www.youtube.com/embed/DSbtkLA3GrY?autoplay=1' hidden='false' autoplay='ture'></embed>","comment":"Interesting TED about him and hip","likes":"","dislikes":""},
+    "Moscow":{"ll": "55.7500° N, 37.6167° E","country":"Russia","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"audio/dmitry.mp3\" type=\"audio/mpeg\"></audio>","name":"Dmitry","video":"","comment":"I don't like it","likes":"","dislikes":""},
+    "honduras":{"ll":"14.1000° N, 87.2167° W","country":"","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"audio/danny.mp3\" type=\"audio/mpeg\"></audio>","name":"Danny","video":"","comment":"Reminds me of another author","likes":"","dislikes":""} ,
+    "Myanmar":{"ll":"22.0000° N, 96.0000° E","country":"","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"audio/aung.mp3\" type=\"audio/mpeg\"></audio>","name":"Anh","video":"","comment":"Reflection","likes":"","dislikes":""},
+    "India"	:{"ll":"21.0000° N, 78.0000° E","country":"","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"audio/ashwin.mp3\" type=\"audio/mpeg\"></audio>","name":"Ashwin","video":"","comment":"Merchants in modern society","likes":"","dislikes":""}
 };
 
 $(document).ready(function()
@@ -128,17 +128,22 @@ $(document).ready(function()
             var attr = paper.parseLatLon(point["ll"]);
             attr.r = 0;
             var dot = paper.circle().attr({href: pointName, fill: "r#FE7727:50-#F57124:100", stroke: "#fff", "stroke-width": 2, r: 0});
+            if (point["video"]!=""){
+                var dot = paper.circle().attr({href: pointName, fill: "r#28e312:50-#F57124:100", stroke: "#fff", "stroke-width": 2, r: 0});
+            }
+
             dot.stop().attr(attr).animate({r: 5}, 1000, "elastic");
             dot[0].onmouseover = function()
             {
                 dot.animate({fill: "r#00BFFF:50-#F57124:100", stroke: dot.color}, 300);
                 paper.safari();
             };
-            dot[0].onmouseout = function()
-            {
-                dot.animate({fill: "r#FE7727:50-#F57124:100", stroke: "#fff"}, 300);
-                paper.safari();
-            };
+//            comment the onmouseout, so that user will know which one he has clicked
+//            dot[0].onmouseout = function()
+//            {
+//                dot.animate({fill: "r#FE7727:50-#F57124:100", stroke: "#fff"}, 300);
+//                paper.safari();
+//            };
         })(postPoints[point],point);
     };
 
@@ -148,11 +153,10 @@ $(document).ready(function()
        var pointPin = $(this).children('title').text();
 
        var title_placeHolder = postPoints[pointPin]["name"],
-           content_placeHolder = postPoints[pointPin]["comment"] + postPoints[pointPin]["audio"];
+           content_placeHolder = postPoints[pointPin]["comment"] + postPoints[pointPin]["audio"] + postPoints[pointPin]["video"];
         title_placeHolder = title_placeHolder +  '\<a class=\'close\'>×</a>' ;
-       $(this).popover({html:true, trigger:'manual', placement:'right', title:title_placeHolder, content:content_placeHolder});
+       $(this).popover({html:true, trigger:'manual', placement:'left', title:title_placeHolder, content:content_placeHolder});
     });
-    console.log("befreo");
 
     $('circle').click(function (e) {
        $(this).popover('show');
@@ -167,8 +171,6 @@ $(document).ready(function()
     });
 
     var finishedPaper = paper.setFinish();
-
-
 
 //    dot.click(clicked);
     function clicked(){
