@@ -1,7 +1,1 @@
-== Welcome to Hospital Remote Controller
-
-
-
-
-== Getting Started
-
+== Welcome to Shakespeares' World
