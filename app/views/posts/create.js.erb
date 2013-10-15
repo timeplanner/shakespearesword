@@ -1,0 +1,13 @@
+<% if @post.errors.any? %>
+console.log('Error');
+$('#postForm').modal('hide')
+$('#postForm').replaceWith("<%=escape_javascript(render "shared/post_form") %>")
+$('#postForm').modal('show')
+<% else %>
+console.log('Created');
+$('#postForm').modal('hide')
+//draw the new
+//TODO
+location.reload();
+
+<% end %>

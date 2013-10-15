@@ -11,7 +11,7 @@ namespace :db do
                          password: "123123",
                          password_confirmation: "123123")
     admin.toggle!(:admin)
-    99.times do |n|
+    1.times do |n|
       name  = Faker::Name.name
       email = "example-#{n+1}@railstutorial.org"
       password  = "password"
@@ -20,5 +20,15 @@ namespace :db do
                    password: password,
                    password_confirmation: password)
     end
+    users = User.all(limit: 3)
+    1.times do
+      comment = Faker::Lorem.sentence(5)
+      location = "wpi"
+      users.each {
+          |user| user.posts.create!(comment: comment,
+                                    location:location ) }
+    end
   end
 end
+
+

@@ -1,0 +1,40 @@
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="postForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">New post</h4>
+      </div>
+      <div class="modal-body">
+        <%= form_for @post, :remote => true do |f| %>
+            <%= render 'shared/error_messages', object: f.object %>
+            <%= label_tag 'location', 'Your city' %>
+
+            <!--<div class="cityInput">ajax</div>-->
+            <%= f.text_field :location, value: @city %>
+
+            <%= label_tag 'audio', 'Audio URL' %>
+            <%= f.text_field :audio, placeholder: "Youtube audio URL or others.Less than 1 minute.." %>
+
+            <%= label_tag 'video', 'Video URL' %>
+            <%= f.text_field :video, placeholder: "Youtube video URL or others..." %>
+
+            <%= label_tag 'comment', 'Comment' %>
+            <%= f.text_area :comment, placeholder: "Comment.Less than 140 letters..." %>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-large btn-primary" data-dismiss="modal">Close</button>
+            <%= f.submit "Post", class: "btn btn-large btn-primary" %>
+        <% end %>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

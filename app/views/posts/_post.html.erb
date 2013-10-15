@@ -1,0 +1,20 @@
+<li xmlns="http://www.w3.org/1999/html">
+  <span class="location">Post Location: <%= post.location %></span></br>
+  <% if !post.audio.empty? %>
+  <span class="audio">Audio: <%= post.audio %></span></br>
+  <% end  %>
+  <% if !post.video.empty? %>
+  <span class="video">Video: <%= post.video %></span></br>
+  <% end  %>
+  <span class="comment">Comment: <%= post.comment %></span>
+
+  <span class="timestamp">
+    Posted <%= time_ago_in_words(post.created_at) %> ago.
+  </span>
+  <% if current_user?(post.user) %>
+      <%= link_to "edit", edit_post_path, method: :post%>
+      <%= link_to "delete", post, method: :delete,
+                  data: { confirm: "You sure?" },
+                  title: post.comment %>
+  <% end %>
+</li>

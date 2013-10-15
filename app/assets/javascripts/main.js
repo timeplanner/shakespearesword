@@ -20,47 +20,19 @@ var visitedCountries = {
     'EG':{'c':'#3cb317', 'n': 'Egypt'},
     'AT':{'c':'#e37144', 'n': 'Austria'}};
 
-var postPoints = {
-    "fuzhou":{"ll":	"26.0761° N, 119.3064° E","country":"China","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"audio/irene.mp3\" type=\"audio/mpeg\"></audio>","name":"Irene","video":"","comment":"Revenge!!!","likes":"","dislikes":""},
-    "zhang jiakou":{"ll": "40.7667° N, 114.8833° E" ,"country":"China","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"ran.mp3\" type=\"audio/mpeg\"></audio>","name":"Ran","video":"\<embed width='200' height='200' src='https://www.youtube.com/embed/DSbtkLA3GrY?autoplay=1' hidden='false' autoplay='ture'></embed>","comment":"Interesting TED about him and hip","likes":"","dislikes":""},
-    "Moscow":{"ll": "55.7500° N, 37.6167° E","country":"Russia","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"audio/dmitry.mp3\" type=\"audio/mpeg\"></audio>","name":"Dmitry","video":"","comment":"I don't like it","likes":"","dislikes":""},
-    "honduras":{"ll":"14.1000° N, 87.2167° W","country":"","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"audio/danny.mp3\" type=\"audio/mpeg\"></audio>","name":"Danny","video":"","comment":"Reminds me of another author","likes":"","dislikes":""} ,
-    "Myanmar":{"ll":"22.0000° N, 96.0000° E","country":"","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"audio/aung.mp3\" type=\"audio/mpeg\"></audio>","name":"Anh","video":"","comment":"Reflection","likes":"","dislikes":""},
-    "India"	:{"ll":"21.0000° N, 78.0000° E","country":"","audio":"\<audio controls autoplay style=\"display:none\"><source src=\"audio/ashwin.mp3\" type=\"audio/mpeg\"></audio>","name":"Ashwin","video":"","comment":"Merchants in modern society","likes":"","dislikes":""}
-};
+
+
+
+function startAPost(){
+    //modal activate
+    $('#postForm').modal({
+        keyboard: true
+    });
+
+}
 
 $(document).ready(function()
 {
-    $(document).mousemove(function(event){
-        $(".mousePose").text(event.offsetX + ", " + event.offsetY);
-    });
-
-    $('.inputCoordBtn').click(function(){
-        var inputCoord = $('.inputCoord').val();
-        var attr = paper.parseLatLon(inputCoord);
-        console.log(attr);
-        }
-    );
-
-    function lon2x(lon)
-    {
-        var xfactor = 2.6938;
-        var xoffset = 465.4;
-        var x = (lon * xfactor) + xoffset;
-        return x;
-    }
-    function lat2y(lat)
-    {
-        var yfactor = -2.6938;
-        var yoffset = 227.066;
-        var y = (lat * yfactor) + yoffset;
-        return y;
-    }
-
-
-
-//			var paper = Raphael('mapHolder');
-
     var paper = Raphael('mapHolder',1000,400);
     panZoom = paper.panzoom({ initialZoom: 0, initialPosition: { x: 0, y: 0} });
     panZoom.enable();
@@ -90,10 +62,7 @@ $(document).ready(function()
         return this.getXY(lat, lon);
     };
 
-    var map = getPaths(paper, { fill: "#333", stroke: "#000", "stroke-width": .5, "stroke-linejoin": "round" });
-    var galleriaThemeLoaded = false;
-    var blackShim;
-
+    var map = getPaths(paper, { fill: "#333", stroke: "#000", "stroke-width":.5, "stroke-linejoin": "round" });
 
     for (var countryCode in map) {
 
@@ -121,18 +90,25 @@ $(document).ready(function()
             }
         })(map[countryCode], countryCode);
     };
+//    add artificial interview records
+    for(var key in arti_postPoints)
+    {
+        if(!arti_postPoints.hasOwnProperty(key)) {
+            continue;
+        }
+        gon.postPoints[key] = arti_postPoints[key];
+    }
 
-
-    for (var point in postPoints) {
-        (function(point,pointName){
-            var attr = paper.parseLatLon(point["ll"]);
+    for (var location in gon.postPoints) {
+        (function(postValues,postLocation){
+            var attr = paper.parseLatLon(postValues["ll"]);//cx, cy
             attr.r = 0;
-            var dot = paper.circle().attr({href: pointName, fill: "r#FE7727:50-#F57124:100", stroke: "#fff", "stroke-width": 2, r: 0});
-            if (point["video"]!=""){
-                var dot = paper.circle().attr({href: pointName, fill: "r#28e312:50-#F57124:100", stroke: "#fff", "stroke-width": 2, r: 0});
+            var dot = paper.circle().attr({href: postLocation, fill: "r#FE7727:50-#F57124:100", stroke: "#fff", "stroke-width": 2, r: 2});
+            if (postValues["video"]!=""){
+                var dot = paper.circle().attr({href: postLocation, fill: "r#28e312:50-#F57124:100", stroke: "#fff", "stroke-width": 2, r: 2});
             }
-
-            dot.stop().attr(attr).animate({r: 5}, 1000, "elastic");
+            //dot.stop().attr(attr).animate({r: 5}, 1000, "elastic");
+            dot.attr(attr).animate({r: 5}, 1000, "elastic");
             dot[0].onmouseover = function()
             {
                 dot.animate({fill: "r#00BFFF:50-#F57124:100", stroke: dot.color}, 300);
@@ -144,16 +120,18 @@ $(document).ready(function()
 //                dot.animate({fill: "r#FE7727:50-#F57124:100", stroke: "#fff"}, 300);
 //                paper.safari();
 //            };
-        })(postPoints[point],point);
+        })(gon.postPoints[location],location);
     };
+
+
 
     $("circle").each(function () {
 
         //.html() won't work.
        var pointPin = $(this).children('title').text();
 
-       var title_placeHolder = postPoints[pointPin]["name"],
-           content_placeHolder = postPoints[pointPin]["comment"] + postPoints[pointPin]["audio"] + postPoints[pointPin]["video"];
+       var title_placeHolder = gon.postPoints[pointPin]["name"],
+           content_placeHolder = gon.postPoints[pointPin]["comment"] + gon.postPoints[pointPin]["audio"] + gon.postPoints[pointPin]["video"];
         title_placeHolder = title_placeHolder +  '\<a class=\'close\'>×</a>' ;
        $(this).popover({html:true, trigger:'manual', placement:'left', title:title_placeHolder, content:content_placeHolder});
     });
@@ -161,8 +139,6 @@ $(document).ready(function()
     $('circle').click(function (e) {
        $(this).popover('show');
        var pointPin = $(this).children('title').text();
-       var title_placeHolder = postPoints[pointPin]["name"],
-           content_placeHolder = postPoints[pointPin]["comment"];
         e.stopPropagation();
     });
 
@@ -172,12 +148,8 @@ $(document).ready(function()
 
     var finishedPaper = paper.setFinish();
 
-//    dot.click(clicked);
-    function clicked(){
-        console.log("dfd");
-    }
+
     var hollowDot = paper.circle().attr({fill: "r#FE7727:50-#F57124:100", stroke: "#fff", "stroke-width": 2, r: 0});
     //paper.circle().attr({fill: "none", stroke: "#f00", r: 5}).attr({cx:10, cy:10});
 
-//    console.log("dfd");
 });
