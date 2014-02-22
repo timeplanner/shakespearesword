@@ -135,7 +135,7 @@ $(document).ready(function()
        console.log("before" + "\n" + gon.postPoints[pointPin]["video"]);
        if( gon.postPoints[pointPin]["video"].lastIndexOf("<iframe") !=-1 ){
          video_path_0 = gon.postPoints[pointPin]["video"].substring( 0,gon.postPoints[pointPin]["video"].lastIndexOf("<iframe") - 1);
-         video_path_1 = gon.postPoints[pointPin]["video"].substring( gon.postPoints[pointPin]["video"].lastIndexOf("//w"),gon.postPoints[pointPin]["video"].lastIndexOf('" frameborder="') - 1);
+         video_path_1 = gon.postPoints[pointPin]["video"].substring( gon.postPoints[pointPin]["video"].lastIndexOf("//w"),gon.postPoints[pointPin]["video"].lastIndexOf('" frameborder="'));
          video_path_2 = gon.postPoints[pointPin]["video"].substring( gon.postPoints[pointPin]["video"].lastIndexOf("</iframe>") + 9, gon.postPoints[pointPin]["video"].length );
          video_path = video_path_0 + ":" + video_path_1 + video_path_2;
        }
