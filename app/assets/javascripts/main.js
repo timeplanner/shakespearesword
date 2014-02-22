@@ -126,12 +126,25 @@ $(document).ready(function()
 
 
     $("circle").each(function () {
-
+        var video_path = "";
+        var video_path_0 = "";
+        var video_path_1 = "";
+        var video_path_2 = "";
         //.html() won't work.
        var pointPin = $(this).children('title').text();
-
-       var title_placeHolder = gon.postPoints[pointPin]["name"],
-           content_placeHolder = gon.postPoints[pointPin]["comment"] + gon.postPoints[pointPin]["audio"] + gon.postPoints[pointPin]["video"];
+       console.log("before" + "\n" + gon.postPoints[pointPin]["video"]);
+       if( gon.postPoints[pointPin]["video"].lastIndexOf("<iframe") !=-1 ){
+         video_path_0 = gon.postPoints[pointPin]["video"].substring( 0,gon.postPoints[pointPin]["video"].lastIndexOf("<iframe") - 1);
+         video_path_1 = gon.postPoints[pointPin]["video"].substring( gon.postPoints[pointPin]["video"].lastIndexOf("//w"),gon.postPoints[pointPin]["video"].lastIndexOf('" frameborder="') - 1);
+         video_path_2 = gon.postPoints[pointPin]["video"].substring( gon.postPoints[pointPin]["video"].lastIndexOf("</iframe>") + 9, gon.postPoints[pointPin]["video"].length );
+         video_path = video_path_0 + ":" + video_path_1 + video_path_2;
+       }
+       else {
+        console.log("no-framed" + "\n" + gon.postPoints[pointPin]["video"]);
+         video_path = gon.postPoints[pointPin]["video"];
+       };
+        var title_placeHolder = gon.postPoints[pointPin]["name"],
+        content_placeHolder = gon.postPoints[pointPin]["comment"] + gon.postPoints[pointPin]["audio"] + video_path;
         title_placeHolder = title_placeHolder +  '\<a class=\'close\'>×</a>' ;
        $(this).popover({html:true, trigger:'manual', placement:'left', title:title_placeHolder, content:content_placeHolder});
     });
